@@ -2,38 +2,14 @@ const figure = document.querySelector('figure');
 const mask = document.querySelector('.mask');
 const countEl = mask.querySelector('span');
 const imgNum = 200;
-let tags = '';
 
-for (let i = 0; i < imgNum; i++) {
-	tags += `<img src="img/pic${i}.jpg" alt='pic${i}' />`;
-}
-figure.innerHTML = tags;
-
-// 동적으로 200개의 DOM이 생성된 순간
-const imgs = figure.querySelectorAll('img');
 let count = 0;
-imgs.forEach((img) => {
-	// 에러 뜬 이미지(엑박)가 있으면 대체이미지 출력
-	img.addEventListener('error', (e) => {
-		e.currentTarget.setAttribute('src', 'img/logo.png');
-	});
-	// 모든 이미지소스 랜더링 완료시
-	img.addEventListener('load', () => {
-		// count값을 다시 백분율로 변환해서 로딩화면에 출력
-		countEl.innerText = parseInt((count / imgNum) * 100) + 1;
-		// count값 증가
-		count++;
-		// count값과 전체 이미지 개수가 동일해지면 (모든 이미지소스 랜더링 완료시)
-		// 마스크 제거
-		if (count === imgNum) mask.remove();
-	});
-});
+
+const imgs = createImgs(figure, imgNum);
+imgCheck(imgs);
 
 figure.addEventListener('mousemove', (e) => {
 	const { pageX } = e;
-	// 백분율 공식 = (현재수치값 / 전체수치값) * 100
-	// parseInt(숫자) = 인수로 전달된 값의 소수점 아래를 버리고 정수로 반환
-	// parseFloat(숫자) = 인수로 전달된 값의 소수점까지 포함한 실수로 반환
 	const percent = parseInt((pageX / window.innerWidth) * imgNum);
 	console.log(percent);
 
@@ -41,13 +17,27 @@ figure.addEventListener('mousemove', (e) => {
 	imgs[percent].style.visibility = 'visible';
 });
 
-/*
-  전체 작업 흐름
-  1. 동적으로 200개의 img DOM 생성
-  2. 마우스무브시 포인터의 가로 좌표값을 200분율로 변환
-  3. 200분율중 현재 마우스 포인터 위치순번에 따른 이미지만 보이게 처리
-  4. img DOM이 생성되고 이미지 소스가 로딩될때마다 로딩순번을 100분율 처리
-  5. 이미지생성시 해당이미지에 에러발생하면 대체이미지 처리
-  6. 이미지소스가 모두 로딩되기 전까지는 마스크화면으로 가리고 로딩상황 100분율로 출력
-  7. 이미지소스 로딩완료시 마스크화면 제거
-*/
+// 동적 이미지 생성 함수
+function createImgs(figure, imgNum, imgName = 'pic') {
+	let tags = '';
+	for (let i = 0; i < imgNum; i++) {
+		tags += `<img src="img/${imgName}${i}.jpg" alt='${imgName}${i}' />`;
+	}
+	figure.innerHTML = tags;
+	// DOM 생성되자마자 바로 return값 내보내서 활용 가능하도록 처리
+	return figure.querySelectorAll('img');
+}
+
+// 이미지소스 로딩 완료여부 체크 함수
+function imgCheck(imgs) {
+	imgs.forEach((img) => {
+		img.addEventListener('error', (e) => {
+			e.currentTarget.setAttribute('src', 'img/logo.png');
+		});
+		img.addEventListener('load', () => {
+			countEl.innerText = parseInt((count / imgNum) * 100) + 1;
+			count++;
+			if (count === imgNum) mask.remove();
+		});
+	});
+}
