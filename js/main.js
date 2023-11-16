@@ -1,13 +1,33 @@
 const figure = document.querySelector('figure');
+const mask = document.querySelector('.mask');
+const countEl = mask.querySelector('span');
 const imgNum = 200;
 let tags = '';
 
 for (let i = 0; i < imgNum; i++) {
-	tags += `<img src="../img/pic${i}.jpg" alt='pic${i}' />`;
+	tags += `<img src="img/pic${i}.jpg" alt='pic${i}' />`;
 }
 figure.innerHTML = tags;
 
+// 동적으로 200개의 DOM이 생성된 순간
 const imgs = figure.querySelectorAll('img');
+let count = 0;
+imgs.forEach((img) => {
+	// 에러 뜬 이미지(엑박)가 있으면 대체이미지 출력
+	img.addEventListener('error', (e) => {
+		e.currentTarget.setAttribute('src', 'img/logo.png');
+	});
+	// 모든 이미지소스 랜더링 완료시
+	img.addEventListener('load', () => {
+		// count값을 다시 백분율로 변환해서 로딩화면에 출력
+		countEl.innerText = parseInt((count / imgNum) * 100) + 1;
+		// count값 증가
+		count++;
+		// count값과 전체 이미지 개수가 동일해지면 (모든 이미지소스 랜더링 완료시)
+		// 마스크 제거
+		if (count === imgNum) mask.remove();
+	});
+});
 
 figure.addEventListener('mousemove', (e) => {
 	const { pageX } = e;
