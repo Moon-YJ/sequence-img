@@ -6,14 +6,18 @@ const imgNum = 200;
 const delayTime = convertSpeed(mask);
 
 // 로딩시 (시스템 이벤트)
-const imgs = createImgs(figure, imgNum, ['img', 'pic', 'jpg']);
+const imgs = createImgs(figure, imgNum);
 imgCheck(imgs, delayTime);
 // event객체가 인수로 전달되는 경우에는 wrapping함수로 감싸지 않아도 됨(함수를 정의문 형태로)
 // 마우스무브시 (사용자 이벤트)
 figure.addEventListener('mousemove', showImg);
 
 // 동적 이미지 생성 함수
-function createImgs(figure, imgNum, [folderName, fileName, fileType]) {
+function createImgs(
+	figure,
+	imgNum,
+	[folderName, fileName, fileType] = ['img', 'pic', 'jpg']
+) {
 	for (let i = 0; i < imgNum; i++) {
 		const img = document.createElement('img');
 		const src = document.createAttribute('src');
