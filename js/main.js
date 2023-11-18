@@ -6,19 +6,21 @@ const imgNum = 200;
 const delayTime = convertSpeed(mask);
 
 // 로딩시 (시스템 이벤트)
-const imgs = createImgs(figure, imgNum);
+const imgs = createImgs(figure, imgNum, ['img', 'pic', 'jpg']);
 imgCheck(imgs, delayTime);
 // event객체가 인수로 전달되는 경우에는 wrapping함수로 감싸지 않아도 됨(함수를 정의문 형태로)
 // 마우스무브시 (사용자 이벤트)
 figure.addEventListener('mousemove', showImg);
 
 // 동적 이미지 생성 함수
-function createImgs(figure, imgNum, imgName = 'pic') {
-	let tags = '';
+function createImgs(figure, imgNum, [folderName, fileName, fileType]) {
 	for (let i = 0; i < imgNum; i++) {
-		tags += `<img src="img/${imgName}${i}.jpg" alt='${imgName}${i}' />`;
+		const img = document.createElement('img');
+		const src = document.createAttribute('src');
+		src.value = `${folderName}/${fileName}${i}.${fileType}`;
+		img.setAttributeNode(src);
+		figure.append(img);
 	}
-	figure.innerHTML = tags;
 	// DOM 생성되자마자 바로 return값 내보내서 활용 가능하도록 처리
 	return figure.querySelectorAll('img');
 }
@@ -36,7 +38,6 @@ function imgCheck(imgs, delayTime) {
 			const percent = parseInt((count / imgNum) * 100) + 1;
 			countEl.innerText = percent;
 			bar.style.width = percent + '%';
-			console.log(bar.style.width);
 			count++;
 			if (count === imgNum) {
 				mask.classList.add('off');
