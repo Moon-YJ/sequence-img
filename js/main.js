@@ -1,5 +1,6 @@
 const figure = document.querySelector('figure');
 const mask = document.querySelector('.mask');
+const bar = mask.querySelector('.progress-bar');
 const countEl = mask.querySelector('span');
 const imgNum = 200;
 const delayTime = convertSpeed(mask);
@@ -32,7 +33,10 @@ function imgCheck(imgs, delayTime) {
 		});
 		// 시스템 이벤트
 		img.addEventListener('load', () => {
-			countEl.innerText = parseInt((count / imgNum) * 100) + 1;
+			const percent = parseInt((count / imgNum) * 100) + 1;
+			countEl.innerText = percent;
+			bar.style.width = percent + '%';
+			console.log(bar.style.width);
 			count++;
 			if (count === imgNum) {
 				mask.classList.add('off');
