@@ -78,6 +78,11 @@ figure img {
   font-weight: normal;
   color: #fff;
   background-color: #111;
+  opacity: 1;
+  transition: opacity 1.5s;
+}
+.mask.off {
+  opacity: 0;
 }
 
 /*# sourceMappingURL=style.css.map */

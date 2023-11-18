@@ -38,4 +38,9 @@ figure {
 	font-weight: normal;
 	color: #fff;
 	background-color: #111;
+	opacity: 1;
+	transition: opacity 1.5s;
+	&.off {
+		opacity: 0;
+	}
 }
